@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Daily Ledger — A small machine for the day</title>
+    <title>Daily Ledger — Personal finance, kept by hand</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,6 +22,10 @@
         --accent: #c8391a;
         --accent-ink: #5c1708;
         --saffron: #e6b64a;
+        --moss: #4a6c3f;
+        --slate: #2a4b6c;
+        --aubergine: #5c2a5c;
+        --linen: #d8c2a8;
         --serif: "Fraunces", "Times New Roman", serif;
         --mono: "JetBrains Mono", "Courier New", monospace;
         --pad: clamp(20px, 3vw, 44px);
@@ -220,6 +224,9 @@
       .card:nth-child(3) {
         animation-delay: 0.34s;
       }
+      .card:nth-child(4) {
+        animation-delay: 0.46s;
+      }
       @keyframes rise {
         to {
           opacity: 1;
@@ -279,306 +286,331 @@
         font-weight: 400;
       }
 
-      /* ─── Card 01: Tally (inverted hero) ─── */
-      .card.tally {
+      /* ─── Card 01: Summary (inverted hero) ─── */
+      .card.summary {
         grid-column: span 7;
         background: var(--ink);
         color: var(--paper-hi);
         border-color: var(--ink);
         overflow: hidden;
       }
-      .card.tally .num {
+      .card.summary .num {
         color: rgba(244, 237, 219, 0.6);
       }
-      .card.tally .num b {
+      .card.summary .num b {
         color: var(--saffron);
       }
-      .card.tally .label {
+      .card.summary .label {
         color: var(--paper-hi);
       }
-      .card.tally .head {
+      .card.summary .head {
         border-bottom-color: rgba(244, 237, 219, 0.25);
       }
-      .card.tally .foot {
+      .card.summary .foot {
         border-top-color: rgba(244, 237, 219, 0.15);
         color: rgba(244, 237, 219, 0.55);
       }
-      .card.tally .foot em {
+      .card.summary .foot em {
         color: rgba(244, 237, 219, 0.8);
       }
 
-      .tally-body {
+      .stat-row {
         display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: center;
-        gap: 24px;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 18px;
         flex: 1;
+        align-items: stretch;
       }
-      .tally-number {
+      .stat {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 6px 18px 6px 0;
+        border-right: 1px solid rgba(244, 237, 219, 0.12);
+      }
+      .stat:last-child {
+        border-right: none;
+        padding-right: 0;
+      }
+      .stat-label {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(244, 237, 219, 0.55);
+        margin-bottom: 10px;
+      }
+      .stat-label .glyph {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 13px;
+        margin-right: 6px;
+      }
+      .stat-label .glyph.up {
+        color: var(--saffron);
+      }
+      .stat-label .glyph.down {
+        color: var(--accent);
+      }
+      .stat-number {
         font-family: var(--serif);
         font-weight: 300;
         font-variation-settings:
           "opsz" 144,
           "SOFT" 100;
-        font-size: clamp(120px, 18vw, 240px);
-        line-height: 0.85;
-        letter-spacing: -0.05em;
+        font-size: clamp(44px, 5.4vw, 72px);
+        line-height: 0.9;
+        letter-spacing: -0.035em;
         color: var(--paper-hi);
-        position: relative;
-        transition:
-          transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-          filter 0.35s ease;
+        transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
       }
-      .tally-number.bump {
-        transform: scale(1.03) translateY(-4px);
-        filter: blur(0.4px);
+      .stat-number.bump {
+        transform: scale(1.03) translateY(-2px);
       }
-      .tally-number .sep {
-        display: inline-block;
-        width: 0.18em;
-      }
-      .tally-meta {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        align-items: flex-end;
-        padding-right: 4px;
-      }
-      .tally-meta .cap {
-        font-family: var(--mono);
-        font-size: 10.5px;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: rgba(244, 237, 219, 0.55);
-      }
-      .tally-meta .delta {
-        font-family: var(--serif);
+      .stat-number .cur {
+        font-size: 0.42em;
+        color: rgba(244, 237, 219, 0.5);
+        margin-right: 4px;
+        letter-spacing: 0;
         font-style: italic;
-        font-size: 15px;
+      }
+      .stat-number.neg {
+        color: var(--accent);
+      }
+      .stat-number.pos {
         color: var(--saffron);
       }
-      .tally-controls {
-        display: flex;
-        gap: 10px;
-        margin-top: 20px;
-      }
-      .btn {
-        font-family: var(--mono);
-        font-size: 12px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        background: transparent;
-        color: inherit;
-        border: 1px solid currentColor;
-        padding: 13px 18px;
-        cursor: pointer;
-        transition:
-          background 0.2s ease,
-          color 0.2s ease,
-          transform 0.08s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .btn:hover {
-        background: currentColor;
-        color: var(--ink);
-      }
-      .card.tally .btn:hover {
-        color: var(--ink);
-      }
-      .btn:active {
-        transform: translateY(1px);
-      }
-      .btn .glyph {
+      .stat-sub {
         font-family: var(--serif);
-        font-size: 18px;
-        line-height: 1;
-        font-weight: 400;
-      }
-      .btn.primary {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: var(--paper-hi);
-      }
-      .btn.primary:hover {
-        background: var(--paper-hi);
-        color: var(--ink);
-        border-color: var(--paper-hi);
-      }
-      .btn.ghost {
-        opacity: 0.85;
+        font-style: italic;
+        font-size: 13px;
+        color: rgba(244, 237, 219, 0.6);
+        margin-top: 8px;
       }
 
-      /* ─── Card 02: Colour ─── */
-      .card.colour {
-        grid-column: span 5;
+      .scope-seg {
+        display: inline-flex;
+        gap: 0;
+        border: 1px solid rgba(244, 237, 219, 0.3);
       }
-
-      .swatch-wrap {
-        position: relative;
-        border: 1px solid var(--rule);
-        aspect-ratio: 16 / 10;
-        margin-bottom: 18px;
-        overflow: hidden;
-        background: var(--accent);
-        transition: background 0.35s ease;
-      }
-      .swatch-wrap::after {
-        /* subtle highlight */
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(
-          120% 90% at 20% 10%,
-          rgba(255, 255, 255, 0.18),
-          transparent 55%
-        );
-        pointer-events: none;
-      }
-      .swatch-wrap .tag {
-        position: absolute;
-        top: 10px;
-        right: 10px;
+      .scope-seg button {
         font-family: var(--mono);
         font-size: 10px;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        background: var(--ink);
-        color: var(--paper-hi);
-        padding: 4px 8px;
-      }
-
-      .hex-row {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 20px;
-        padding: 6px 0 14px;
-        border-bottom: 1px solid rgba(26, 23, 20, 0.15);
-        margin-bottom: 14px;
-      }
-      .hex-value {
-        font-family: var(--serif);
-        font-weight: 400;
-        font-size: clamp(30px, 4.2vw, 44px);
-        letter-spacing: -0.02em;
-        color: var(--ink);
-      }
-      .hex-value::before {
-        content: "#";
-        color: var(--accent);
-        margin-right: 2px;
-        font-weight: 300;
-      }
-      .hex-value .hash {
-        display: none;
-      }
-      .rgb-value {
-        font-family: var(--mono);
-        font-size: 11px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--ink-2);
-        text-align: right;
-        line-height: 1.6;
-      }
-      .rgb-value b {
-        color: var(--ink);
-        font-weight: 500;
-      }
-
-      .picker-row {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 16px;
-      }
-      .picker-row label {
-        font-family: var(--mono);
-        font-size: 10.5px;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--ink-2);
-      }
-      /* Hide native colour picker chrome but keep it functional */
-      input[type="color"].hidden-native {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        opacity: 0;
-        pointer-events: none;
-      }
-      .picker-btn {
-        font-family: var(--mono);
-        font-size: 11px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        background: var(--ink);
-        color: var(--paper-hi);
-        border: 1px solid var(--ink);
-        padding: 10px 14px;
+        background: transparent;
+        color: rgba(244, 237, 219, 0.65);
+        border: none;
+        padding: 8px 12px;
         cursor: pointer;
+        border-right: 1px solid rgba(244, 237, 219, 0.15);
         transition:
           background 0.2s ease,
           color 0.2s ease;
       }
-      .picker-btn:hover {
-        background: var(--accent);
-        border-color: var(--accent);
+      .scope-seg button:last-child {
+        border-right: none;
+      }
+      .scope-seg button:hover {
+        color: var(--paper-hi);
+      }
+      .scope-seg button.active {
+        background: var(--paper-hi);
+        color: var(--ink);
       }
 
-      .presets {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 6px;
+      /* ─── Card 02: Charts ─── */
+      .card.charts {
+        grid-column: span 5;
       }
-      .preset {
-        aspect-ratio: 1 / 1;
-        border: 1px solid var(--rule);
-        cursor: pointer;
+
+      .chart-section {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        flex: 1;
+      }
+      .pie-wrap {
         position: relative;
-        transition: transform 0.15s ease;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 4px 0 0;
       }
-      .preset:hover {
-        transform: translateY(-2px);
+      .pie {
+        width: 200px;
+        height: 200px;
+        display: block;
       }
-      .preset.active::after {
-        content: "";
-        position: absolute;
-        inset: -4px;
-        border: 1px solid var(--ink);
+      .pie circle.track {
+        fill: rgba(26, 23, 20, 0.06);
+      }
+      .pie path {
+        stroke: var(--paper-hi);
+        stroke-width: 0.6;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        transform-origin: center;
+      }
+      .pie path:hover {
+        opacity: 0.88;
+      }
+      .pie-caption {
+        margin-top: 12px;
+        font-family: var(--serif);
+        font-weight: 300;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+      }
+      .pie-caption .cur {
+        font-size: 0.55em;
+        color: var(--ink-3);
+        margin-right: 3px;
+        font-style: italic;
+      }
+      .pie-sub {
+        font-family: var(--mono);
+        font-size: 9.5px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-top: 5px;
+      }
+      .pie-empty {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 13px;
+        color: var(--ink-3);
+        margin-top: 6px;
       }
 
-      /* ─── Card 03: Rounds / Todos ─── */
-      .card.todo {
+      .legend {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px 14px;
+        padding: 8px 0 4px;
+        border-top: 1px solid rgba(26, 23, 20, 0.12);
+      }
+      .legend-item {
+        display: grid;
+        grid-template-columns: 8px 1fr auto;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 0;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.06em;
+        color: var(--ink-2);
+      }
+      .legend-swatch {
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+      }
+      .legend-name {
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .legend-val {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 13px;
+        color: var(--ink);
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      /* ─── Card 03: Transactions ─── */
+      .card.tx {
         grid-column: span 12;
       }
 
-      .todo-input-row {
+      .tx-form {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 110px auto 1fr 130px 130px 1.1fr auto;
         gap: 0;
         margin-bottom: 18px;
         border: 1px solid var(--rule);
         background: var(--paper);
       }
-      .todo-input-row input {
+      .tx-form > * {
+        border-right: 1px solid rgba(26, 23, 20, 0.18);
+      }
+      .tx-form > *:last-child {
+        border-right: none;
+      }
+      .tx-form input[type="number"],
+      .tx-form input[type="text"],
+      .tx-form input[type="date"],
+      .tx-form select {
         font-family: var(--serif);
-        font-size: 19px;
         font-weight: 300;
-        font-style: italic;
+        font-size: 17px;
         background: transparent;
         border: none;
-        padding: 16px 18px;
+        padding: 15px 16px;
         color: var(--ink);
         outline: none;
-        letter-spacing: -0.005em;
+        width: 100%;
       }
-      .todo-input-row input::placeholder {
+      .tx-form input[type="number"] {
+        font-feature-settings: "tnum";
+        font-style: italic;
+      }
+      .tx-form input::placeholder {
         color: var(--ink-3);
+        font-style: italic;
       }
-      .todo-input-row button {
+      .tx-form select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1 L5 5 L9 1' fill='none' stroke='%231a1714' stroke-width='1.2'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 30px;
+        cursor: pointer;
+        font-style: italic;
+      }
+      .tx-form input[type="date"] {
+        font-family: var(--mono);
+        font-size: 13px;
+        font-style: normal;
+        letter-spacing: 0.02em;
+      }
+      .tx-type-toggle {
+        display: flex;
+      }
+      .tx-type-toggle button {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        background: transparent;
+        color: var(--ink-3);
+        border: none;
+        padding: 0 16px;
+        cursor: pointer;
+        border-right: 1px solid rgba(26, 23, 20, 0.18);
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+        min-width: 72px;
+      }
+      .tx-type-toggle button:last-child {
+        border-right: none;
+      }
+      .tx-type-toggle button.active {
+        background: var(--ink);
+        color: var(--paper-hi);
+      }
+      .tx-type-toggle button.active[data-type="expense"] {
+        background: var(--accent);
+      }
+      .tx-form button[type="submit"] {
         font-family: var(--mono);
         font-size: 11px;
         letter-spacing: 0.22em;
@@ -586,7 +618,6 @@
         background: var(--ink);
         color: var(--paper-hi);
         border: none;
-        border-left: 1px solid var(--ink);
         padding: 0 26px;
         cursor: pointer;
         display: flex;
@@ -594,33 +625,98 @@
         gap: 10px;
         transition: background 0.2s ease;
       }
-      .todo-input-row button:hover {
+      .tx-form button[type="submit"]:hover {
         background: var(--accent);
       }
-      .todo-input-row button .glyph {
+      .tx-form button[type="submit"] .glyph {
         font-family: var(--serif);
         font-size: 18px;
         font-style: italic;
         font-weight: 300;
       }
 
-      .todo-list {
+      .tx-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        align-items: center;
+        padding-bottom: 14px;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed rgba(26, 23, 20, 0.2);
+      }
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .filter-group .lbl {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+      }
+      .seg {
+        display: inline-flex;
+        border: 1px solid var(--rule);
+      }
+      .seg button {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        background: transparent;
+        color: var(--ink-2);
+        border: none;
+        padding: 7px 12px;
+        cursor: pointer;
+        border-right: 1px solid rgba(26, 23, 20, 0.18);
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .seg button:last-child {
+        border-right: none;
+      }
+      .seg button:hover {
+        color: var(--ink);
+      }
+      .seg button.active {
+        background: var(--ink);
+        color: var(--paper-hi);
+      }
+      .tx-filters select {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        background: transparent;
+        border: 1px solid var(--rule);
+        padding: 7px 28px 7px 12px;
+        color: var(--ink);
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1 L5 5 L9 1' fill='none' stroke='%231a1714' stroke-width='1.2'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+      }
+
+      .tx-list {
         list-style: none;
         display: flex;
         flex-direction: column;
-        counter-reset: task;
       }
-      .todo-item {
-        counter-increment: task;
+      .tx-item {
         display: grid;
-        grid-template-columns: 42px 28px 1fr auto;
+        grid-template-columns: 44px 90px 130px 1fr auto auto auto;
         align-items: center;
-        gap: 14px;
+        gap: 16px;
         padding: 14px 4px;
         border-bottom: 1px solid rgba(26, 23, 20, 0.12);
         animation: fadeIn 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
       }
-      .todo-item.removing {
+      .tx-item.removing {
         animation: fadeOut 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
       }
       @keyframes fadeIn {
@@ -643,62 +739,77 @@
           border: 0;
         }
       }
-      .todo-item .idx {
+      .tx-item .swatch {
+        width: 10px;
+        height: 10px;
+        background: var(--accent);
+        margin-left: 8px;
+      }
+      .tx-item .date {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        color: var(--ink-3);
+      }
+      .tx-item .cat .recur {
         font-family: var(--serif);
         font-style: italic;
         font-weight: 300;
-        font-size: 20px;
-        color: var(--ink-3);
+        font-size: 14px;
+        color: var(--accent);
+        margin-left: 6px;
+        letter-spacing: 0;
       }
-      .todo-item .idx::before {
-        content: counter(task, decimal-leading-zero);
+      .tx-item .cat {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink);
       }
-      .check {
-        width: 22px;
-        height: 22px;
-        border: 1px solid var(--ink);
-        background: var(--paper);
-        position: relative;
-        cursor: pointer;
-        transition: background 0.15s ease;
-      }
-      .check:hover {
-        background: rgba(200, 57, 26, 0.08);
-      }
-      .check.done {
-        background: var(--accent);
-        border-color: var(--accent);
-      }
-      .check.done::after {
-        content: "";
-        position: absolute;
-        left: 5px;
-        top: 2px;
-        width: 7px;
-        height: 12px;
-        border: solid var(--paper-hi);
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-      }
-      .todo-item .text {
+      .tx-item .note {
         font-family: var(--serif);
         font-weight: 400;
-        font-size: 19px;
+        font-size: 17px;
         line-height: 1.3;
         color: var(--ink);
         letter-spacing: -0.005em;
-        transition:
-          color 0.2s ease,
-          text-decoration-color 0.3s ease;
-        text-decoration: line-through transparent;
-        text-decoration-thickness: 1.5px;
-      }
-      .todo-item.done .text {
-        color: var(--ink-3);
-        text-decoration-color: var(--accent);
         font-style: italic;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-      .todo-item .remove {
+      .tx-item .note.empty {
+        color: var(--ink-3);
+        font-weight: 300;
+      }
+      .tx-item .amount {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+        font-feature-settings: "tnum";
+        min-width: 110px;
+        text-align: right;
+      }
+      .tx-item .amount.income {
+        color: var(--moss);
+      }
+      .tx-item .amount.expense {
+        color: var(--accent);
+      }
+      .tx-item .amount .sign {
+        font-style: italic;
+        font-weight: 300;
+        margin-right: 2px;
+      }
+      .tx-item .amount .cur {
+        font-size: 0.62em;
+        font-style: italic;
+        color: var(--ink-3);
+        margin-right: 3px;
+      }
+      .tx-item .remove {
         background: none;
         border: none;
         cursor: pointer;
@@ -710,11 +821,11 @@
         padding: 6px 10px;
         transition: color 0.2s ease;
       }
-      .todo-item .remove:hover {
+      .tx-item .remove:hover {
         color: var(--accent);
       }
 
-      .todo-empty {
+      .tx-empty {
         padding: 30px 4px;
         font-family: var(--serif);
         font-style: italic;
@@ -723,6 +834,218 @@
         color: var(--ink-3);
         text-align: center;
         border-bottom: 1px solid rgba(26, 23, 20, 0.08);
+      }
+
+      /* ─── Card 03: Trend (30-day) ─── */
+      .card.trend {
+        grid-column: span 12;
+      }
+      .trend-wrap {
+        position: relative;
+        width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .trend-svg {
+        width: 100%;
+        height: 200px;
+        display: block;
+        overflow: visible;
+      }
+      .trend-grid {
+        stroke: rgba(26, 23, 20, 0.08);
+        stroke-width: 0.5;
+      }
+      .trend-axis {
+        stroke: rgba(26, 23, 20, 0.35);
+        stroke-width: 0.6;
+      }
+      .trend-income-area {
+        fill: rgba(74, 108, 63, 0.2);
+      }
+      .trend-income-line {
+        fill: none;
+        stroke: var(--moss);
+        stroke-width: 1.3;
+        stroke-linejoin: round;
+      }
+      .trend-expense-area {
+        fill: rgba(200, 57, 26, 0.18);
+      }
+      .trend-expense-line {
+        fill: none;
+        stroke: var(--accent);
+        stroke-width: 1.3;
+        stroke-linejoin: round;
+      }
+      .trend-net-line {
+        fill: none;
+        stroke: var(--ink);
+        stroke-width: 1.5;
+        stroke-dasharray: 3 3;
+      }
+      .trend-tick {
+        font-family: var(--mono);
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        fill: var(--ink-3);
+        text-transform: uppercase;
+      }
+      .trend-legend {
+        display: flex;
+        gap: 26px;
+        padding: 14px 0 4px;
+        border-top: 1px solid rgba(26, 23, 20, 0.12);
+        margin-top: 14px;
+        flex-wrap: wrap;
+      }
+      .trend-legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-2);
+      }
+      .trend-legend-item .swatch {
+        width: 16px;
+        height: 10px;
+        display: inline-block;
+      }
+      .trend-legend-item .swatch.inc {
+        background: rgba(74, 108, 63, 0.28);
+        border: 1px solid var(--moss);
+      }
+      .trend-legend-item .swatch.exp {
+        background: rgba(200, 57, 26, 0.25);
+        border: 1px solid var(--accent);
+      }
+      .trend-legend-item .swatch.net {
+        border-top: 1.5px dashed var(--ink);
+        height: 0;
+        background: transparent;
+      }
+      .trend-legend-item .val {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 13px;
+        color: var(--ink);
+        letter-spacing: 0;
+        text-transform: none;
+        margin-left: 6px;
+      }
+      .trend-empty {
+        padding: 44px 4px;
+        text-align: center;
+        font-family: var(--serif);
+        font-style: italic;
+        color: var(--ink-3);
+        font-size: 16px;
+      }
+
+      /* ─── Search + edit extensions on tx card ─── */
+      .tx-filters .search {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 300;
+        font-size: 14px;
+        background: transparent;
+        border: 1px solid var(--rule);
+        padding: 7px 12px;
+        color: var(--ink);
+        outline: none;
+        min-width: 180px;
+        letter-spacing: 0;
+      }
+      .tx-filters .search::placeholder {
+        color: var(--ink-3);
+      }
+      .tx-filters .search:focus {
+        border-color: var(--accent);
+      }
+      .tx-item .edit {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        padding: 6px 10px;
+        transition: color 0.2s ease;
+      }
+      .tx-item .edit:hover {
+        color: var(--accent);
+      }
+      .tx-item.editing {
+        background: rgba(200, 57, 26, 0.04);
+      }
+      .tx-edit {
+        display: grid;
+        grid-template-columns: 90px 110px 140px 1fr 130px auto auto;
+        gap: 10px;
+        align-items: center;
+        padding: 14px 4px;
+        border-bottom: 1px solid rgba(26, 23, 20, 0.12);
+      }
+      .tx-edit input,
+      .tx-edit select {
+        font-family: var(--serif);
+        font-weight: 300;
+        font-size: 15px;
+        background: var(--paper-hi);
+        border: 1px solid rgba(26, 23, 20, 0.25);
+        padding: 8px 10px;
+        color: var(--ink);
+        outline: none;
+        width: 100%;
+      }
+      .tx-edit input[type="number"] {
+        font-style: italic;
+        font-feature-settings: "tnum";
+      }
+      .tx-edit input[type="date"] {
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .tx-edit select {
+        font-style: italic;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1 L5 5 L9 1' fill='none' stroke='%231a1714' stroke-width='1.2'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 28px;
+      }
+      .tx-edit button {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        border: 1px solid var(--ink);
+        padding: 8px 12px;
+        background: transparent;
+        cursor: pointer;
+        color: var(--ink);
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .tx-edit button.save {
+        background: var(--ink);
+        color: var(--paper-hi);
+      }
+      .tx-edit button.save:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .tx-edit button.cancel:hover {
+        color: var(--accent);
+        border-color: var(--accent);
       }
 
       /* ─────────────── FOOTER ─────────────── */
@@ -754,12 +1077,93 @@
       }
 
       /* ─────────────── RESPONSIVE ─────────────── */
-      @media (max-width: 960px) {
-        .card.tally {
+      @media (max-width: 1040px) {
+        .card.summary {
           grid-column: span 12;
         }
-        .card.colour {
+        .card.charts {
           grid-column: span 12;
+        }
+        .tx-edit {
+          grid-template-columns: 1fr 1fr;
+          row-gap: 8px;
+        }
+        .tx-edit .note,
+        .tx-edit input[type="text"] {
+          grid-column: span 2;
+        }
+        .tx-edit .actions {
+          grid-column: span 2;
+          display: flex;
+          gap: 10px;
+          justify-content: flex-end;
+        }
+        .tx-form {
+          grid-template-columns: 1fr 1fr;
+        }
+        .tx-form > * {
+          border-right: none;
+          border-bottom: 1px solid rgba(26, 23, 20, 0.18);
+        }
+        .tx-form > *:nth-last-child(-n + 3) {
+          border-bottom: none;
+        }
+        .tx-form button[type="submit"] {
+          grid-column: span 2;
+          padding: 16px;
+          justify-content: center;
+          border-top: 1px solid rgba(26, 23, 20, 0.18);
+        }
+        .tx-item {
+          grid-template-columns: 28px 1fr auto;
+          grid-template-rows: auto auto;
+          row-gap: 6px;
+        }
+        .tx-item .swatch {
+          grid-row: 1 / 3;
+        }
+        .tx-item .date {
+          grid-column: 2;
+          grid-row: 1;
+        }
+        .tx-item .cat {
+          grid-column: 3;
+          grid-row: 1;
+          text-align: right;
+        }
+        .tx-item .note {
+          grid-column: 2 / 4;
+          grid-row: 2;
+        }
+        .tx-item .amount {
+          grid-column: 2 / 3;
+          grid-row: 3;
+          text-align: left;
+          min-width: 0;
+        }
+        .tx-item .edit {
+          grid-column: 2;
+          grid-row: 4;
+          justify-self: start;
+          padding-left: 0;
+        }
+        .tx-item .remove {
+          grid-column: 3;
+          grid-row: 3;
+          justify-self: end;
+        }
+      }
+      @media (max-width: 720px) {
+        .stat-row {
+          grid-template-columns: 1fr;
+        }
+        .stat {
+          border-right: none;
+          border-bottom: 1px solid rgba(244, 237, 219, 0.12);
+          padding: 10px 0;
+        }
+        .stat:last-child {
+          border-bottom: none;
         }
         .headline {
           grid-template-columns: 1fr;
@@ -770,12 +1174,6 @@
         }
         .headline aside::before {
           margin: 0 0 12px 0;
-        }
-        .tally-body {
-          grid-template-columns: 1fr;
-        }
-        .tally-meta {
-          align-items: flex-start;
         }
         .mast {
           grid-template-columns: 1fr;
@@ -806,10 +1204,10 @@
       <header class="mast">
         <div class="left">
           <span><b>Vol. IV</b> &nbsp;·&nbsp; N°&thinsp;017</span>
-          <span class="stamp">Ward 03, west wing</span>
+          <span class="stamp">Kept by hand, balanced by habit</span>
         </div>
         <div class="center">
-          <span><span class="dot"></span><b>Live session</b></span>
+          <span><span class="dot"></span><b>Ledger open</b></span>
         </div>
         <div class="right">
           <span id="clock">00:00:00 BST</span>
@@ -820,147 +1218,194 @@
       <!-- HEADLINE -->
       <section class="headline">
         <div>
-          <div class="kicker">Daily ledger · a dashboard of small things</div>
-          <h1>A small machine<br />for the <em>day.</em></h1>
+          <div class="kicker">Daily ledger · a dashboard for the purse</div>
+          <h1>Every coin<br />in its <em>column.</em></h1>
         </div>
-        <aside>Three widgets, kept deliberately plain — so the day can keep its shape.</aside>
+        <aside>Three widgets, kept deliberately plain — so the money can keep its shape.</aside>
       </section>
 
       <!-- GRID -->
       <main class="grid">
-        <!-- 01 · TALLY -->
-        <section class="card tally" aria-labelledby="tally-label">
+        <!-- 01 · SUMMARY -->
+        <section class="card summary" aria-labelledby="summary-label">
           <div class="head">
-            <span class="num"><b>N°&thinsp;01</b> &nbsp;/&nbsp; <i>tally</i></span>
-            <span class="label" id="tally-label">Running count</span>
+            <span class="num"><b>N°&thinsp;01</b> &nbsp;/&nbsp; <i>summary</i></span>
+            <span class="label" id="summary-label">Income · Expenses · Net</span>
           </div>
 
-          <div class="tally-body">
-            <div class="tally-number" id="tallyNumber">000</div>
-            <div class="tally-meta">
-              <span class="cap">Today</span>
-              <span class="delta" id="tallyDelta">— at rest.</span>
+          <div class="stat-row">
+            <div class="stat">
+              <div class="stat-label"><span class="glyph up">↑</span>Income</div>
+              <div class="stat-number" id="statIncome"><span class="cur">£</span>0</div>
+              <div class="stat-sub" id="statIncomeSub">— nothing received yet.</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label"><span class="glyph down">↓</span>Expenses</div>
+              <div class="stat-number" id="statExpense"><span class="cur">£</span>0</div>
+              <div class="stat-sub" id="statExpenseSub">— nothing spent yet.</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Net balance</div>
+              <div class="stat-number" id="statNet"><span class="cur">£</span>0</div>
+              <div class="stat-sub" id="statNetSub">— the books are empty.</div>
             </div>
           </div>
 
-          <div class="tally-controls">
-            <button class="btn" id="tallyDec" aria-label="Decrement tally">
-              <span class="glyph">−</span> Less
-            </button>
-            <button class="btn primary" id="tallyInc" aria-label="Increment tally">
-              <span class="glyph">+</span> More
-            </button>
-            <button class="btn ghost" id="tallyReset" aria-label="Reset tally">
-              <span class="glyph">↻</span> Reset
-            </button>
-          </div>
-
           <div class="foot">
-            <span>Tap or press ↑ ↓</span>
-            <em>— a gentle tally, not a target.</em>
+            <span id="scopeSub">0 entries · all time</span>
+            <div class="scope-seg" id="scopeSeg" role="tablist" aria-label="Scope">
+              <button type="button" data-scope="month" role="tab">This month</button>
+              <button type="button" data-scope="all" class="active" role="tab">All time</button>
+            </div>
           </div>
         </section>
 
-        <!-- 02 · COLOUR -->
-        <section class="card colour" aria-labelledby="colour-label">
+        <!-- 02 · CHARTS -->
+        <section class="card charts" aria-labelledby="charts-label">
           <div class="head">
-            <span class="num"><b>N°&thinsp;02</b> &nbsp;/&nbsp; <i>palette</i></span>
-            <span class="label" id="colour-label">Colour selector</span>
+            <span class="num"><b>N°&thinsp;02</b> &nbsp;/&nbsp; <i>shape</i></span>
+            <span class="label" id="charts-label">Where it goes</span>
           </div>
 
-          <div class="swatch-wrap" id="swatch">
-            <span class="tag">Specimen</span>
+          <div class="chart-section">
+            <div class="pie-wrap">
+              <svg class="pie" viewBox="0 0 100 100" aria-label="Expense breakdown by category">
+                <circle class="track" cx="50" cy="50" r="44" />
+                <g id="pieSlices"></g>
+              </svg>
+              <div class="pie-caption" id="pieTotal"><span class="cur">£</span>0</div>
+              <div class="pie-sub">Total spent</div>
+              <div class="pie-empty" id="pieEmpty">— no expenses recorded yet.</div>
+            </div>
+            <div class="legend" id="legend"></div>
           </div>
 
-          <div class="hex-row">
-            <div class="hex-value" id="hexValue">C8391A</div>
-            <div class="rgb-value">
-              R <b id="rVal">200</b><br />
-              G <b id="gVal">57</b><br />
-              B <b id="bVal">26</b>
+          <div class="foot">
+            <span id="chartsCount">No data</span>
+            <em>— a shape emerges.</em>
+          </div>
+        </section>
+
+        <!-- 03 · TREND -->
+        <section class="card trend" aria-labelledby="trend-label">
+          <div class="head">
+            <span class="num"><b>N°&thinsp;03</b> &nbsp;/&nbsp; <i>trend</i></span>
+            <span class="label" id="trend-label">Last 30 days</span>
+          </div>
+
+          <div class="trend-wrap">
+            <svg
+              class="trend-svg"
+              id="trendSvg"
+              viewBox="0 0 600 200"
+              preserveAspectRatio="none"
+              aria-label="30-day income and expense trend"
+            ></svg>
+            <div class="trend-empty" id="trendEmpty" style="display: none">
+              — nothing yet to trace.
+            </div>
+            <div class="trend-legend">
+              <span class="trend-legend-item"
+                ><i class="swatch inc"></i>Income
+                <span class="val" id="trendIncomeTotal">£0</span></span
+              >
+              <span class="trend-legend-item"
+                ><i class="swatch exp"></i>Expenses
+                <span class="val" id="trendExpenseTotal">£0</span></span
+              >
+              <span class="trend-legend-item"
+                ><i class="swatch net"></i>Net <span class="val" id="trendNetTotal">£0</span></span
+              >
             </div>
           </div>
 
-          <div class="picker-row">
-            <label for="colourInput">Choose</label>
-            <button class="picker-btn" id="openPicker">Open colour wheel ↗</button>
-            <input type="color" id="colourInput" class="hidden-native" value="#C8391A" />
-          </div>
-
-          <div class="presets" id="presets">
-            <button
-              class="preset active"
-              data-c="#C8391A"
-              style="background: #c8391a"
-              title="Vermillion"
-            ></button>
-            <button
-              class="preset"
-              data-c="#E6B64A"
-              style="background: #e6b64a"
-              title="Saffron"
-            ></button>
-            <button
-              class="preset"
-              data-c="#4A6C3F"
-              style="background: #4a6c3f"
-              title="Moss"
-            ></button>
-            <button
-              class="preset"
-              data-c="#2A4B6C"
-              style="background: #2a4b6c"
-              title="Slate"
-            ></button>
-            <button
-              class="preset"
-              data-c="#5C2A5C"
-              style="background: #5c2a5c"
-              title="Aubergine"
-            ></button>
-            <button
-              class="preset"
-              data-c="#1A1714"
-              style="background: #1a1714"
-              title="Ink"
-            ></button>
-            <button
-              class="preset"
-              data-c="#D8C2A8"
-              style="background: #d8c2a8"
-              title="Linen"
-            ></button>
-          </div>
-
           <div class="foot">
-            <span>Swatch updates live</span>
-            <em>— for charts, for notes, for mood.</em>
+            <span id="trendRange">Last 30 days</span>
+            <em>— the shape of the month.</em>
           </div>
         </section>
 
-        <!-- 03 · ROUNDS / TODO -->
-        <section class="card todo" aria-labelledby="todo-label">
+        <!-- 04 · TRANSACTIONS -->
+        <section class="card tx" aria-labelledby="tx-label">
           <div class="head">
-            <span class="num"><b>N°&thinsp;03</b> &nbsp;/&nbsp; <i>rounds</i></span>
-            <span class="label" id="todo-label">Tasks for the day</span>
+            <span class="num"><b>N°&thinsp;04</b> &nbsp;/&nbsp; <i>entries</i></span>
+            <span class="label" id="tx-label">Transactions</span>
           </div>
 
-          <form class="todo-input-row" id="todoForm">
+          <form class="tx-form" id="txForm" autocomplete="off">
+            <input
+              type="number"
+              id="txAmount"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              required
+              aria-label="Amount"
+            />
+            <div class="tx-type-toggle" id="txType" role="radiogroup" aria-label="Type">
+              <button
+                type="button"
+                data-type="expense"
+                class="active"
+                role="radio"
+                aria-checked="true"
+              >
+                Expense
+              </button>
+              <button type="button" data-type="income" role="radio" aria-checked="false">
+                Income
+              </button>
+            </div>
+            <select id="txCategory" aria-label="Category"></select>
+            <input type="date" id="txDate" aria-label="Date" required />
+            <select id="txRecurrence" aria-label="Repeat">
+              <option value="none">Once</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
             <input
               type="text"
-              id="todoInput"
-              placeholder="Write a task, then press enter…"
-              autocomplete="off"
+              id="txNote"
+              placeholder="A note, if you like…"
+              maxlength="80"
+              aria-label="Note"
             />
-            <button type="submit"><span class="glyph">+</span> Add</button>
+            <button type="submit"><span class="glyph">+</span> Record</button>
           </form>
 
-          <ul class="todo-list" id="todoList"></ul>
-          <div class="todo-empty" id="todoEmpty">Nothing written down yet — the page is quiet.</div>
+          <div class="tx-filters">
+            <div class="filter-group">
+              <span class="lbl">Show</span>
+              <div class="seg" id="filterType" role="tablist" aria-label="Filter by type">
+                <button type="button" data-val="all" class="active" role="tab">All</button>
+                <button type="button" data-val="income" role="tab">Income</button>
+                <button type="button" data-val="expense" role="tab">Expense</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <span class="lbl">Category</span>
+              <select id="filterCategory" aria-label="Filter by category">
+                <option value="all">All categories</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <span class="lbl">Find</span>
+              <input
+                type="text"
+                class="search"
+                id="filterSearch"
+                placeholder="Search note or category…"
+                aria-label="Search transactions"
+              />
+            </div>
+          </div>
+
+          <ul class="tx-list" id="txList"></ul>
+          <div class="tx-empty" id="txEmpty">Nothing recorded yet — the page is quiet.</div>
 
           <div class="foot">
-            <span id="todoCount">0 of 0 complete</span>
-            <em>— tick them off as you go.</em>
+            <span id="txCount">0 entries</span>
+            <em>— write it down while it's small.</em>
           </div>
         </section>
       </main>
@@ -974,6 +1419,28 @@
     </div>
 
     <script>
+      /* ────────── CATEGORIES ────────── */
+      const CATEGORIES = {
+        income: [
+          { name: "Salary", color: "#4A6C3F" },
+          { name: "Freelance", color: "#2A4B6C" },
+          { name: "Gift", color: "#E6B64A" },
+          { name: "Other income", color: "#8A8270" },
+        ],
+        expense: [
+          { name: "Food", color: "#C8391A" },
+          { name: "Transport", color: "#E6B64A" },
+          { name: "Housing", color: "#4A6C3F" },
+          { name: "Bills", color: "#2A4B6C" },
+          { name: "Leisure", color: "#5C2A5C" },
+          { name: "Health", color: "#8A8270" },
+          { name: "Other", color: "#D8C2A8" },
+        ],
+      };
+      const CAT_COLOR = Object.fromEntries(
+        [...CATEGORIES.income, ...CATEGORIES.expense].map((c) => [c.name, c.color]),
+      );
+
       /* ────────── CLOCK ────────── */
       (function clock() {
         const el = document.getElementById("clock");
@@ -997,187 +1464,716 @@
         setInterval(tick, 1000);
       })();
 
-      /* ────────── TALLY COUNTER ────────── */
-      (function tally() {
-        const numEl = document.getElementById("tallyNumber");
-        const deltaEl = document.getElementById("tallyDelta");
-        const inc = document.getElementById("tallyInc");
-        const dec = document.getElementById("tallyDec");
-        const reset = document.getElementById("tallyReset");
-
-        let count = 0;
-        const phrases = {
-          up: ["— nudged upwards.", "— one more.", "— creeping along.", "— another added."],
-          down: ["— stepped back.", "— one fewer.", "— tidied away.", "— a quiet decrement."],
-          zero: ["— back to zero.", "— a fresh start.", "— blank slate."],
-          rest: ["— at rest."],
+      /* ────────── STORE ────────── */
+      const Store = (() => {
+        const KEY = "dailyLedger.v1";
+        const DEFAULT = {
+          transactions: [],
+          filter: { type: "all", category: "all", search: "" },
+          scope: "all",
         };
-        const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        const subs = [];
+        let state = load();
 
-        function render(dir) {
-          numEl.textContent = String(count).padStart(3, "0");
-          numEl.classList.remove("bump");
-          void numEl.offsetWidth; // reflow to restart animation
-          numEl.classList.add("bump");
-          if (count === 0 && dir === "reset") deltaEl.textContent = pick(phrases.zero);
-          else if (dir === "up") deltaEl.textContent = pick(phrases.up);
-          else if (dir === "down") deltaEl.textContent = pick(phrases.down);
-          else deltaEl.textContent = pick(phrases.rest);
+        function load() {
+          try {
+            const raw = localStorage.getItem(KEY);
+            if (!raw) return structuredClone(DEFAULT);
+            const parsed = JSON.parse(raw);
+            return {
+              ...structuredClone(DEFAULT),
+              ...parsed,
+              filter: { ...DEFAULT.filter, ...(parsed.filter || {}) },
+            };
+          } catch {
+            return structuredClone(DEFAULT);
+          }
         }
-
-        inc.addEventListener("click", () => {
-          count++;
-          render("up");
-        });
-        dec.addEventListener("click", () => {
-          count = Math.max(0, count - 1);
-          render("down");
-        });
-        reset.addEventListener("click", () => {
-          count = 0;
-          render("reset");
-        });
-
-        document.addEventListener("keydown", (e) => {
-          if (e.target.matches("input, textarea")) return;
-          if (e.key === "ArrowUp") {
-            count++;
-            render("up");
-            e.preventDefault();
-          }
-          if (e.key === "ArrowDown") {
-            count = Math.max(0, count - 1);
-            render("down");
-            e.preventDefault();
-          }
-        });
-
-        render();
+        function save() {
+          try {
+            localStorage.setItem(KEY, JSON.stringify(state));
+          } catch {}
+        }
+        function notify() {
+          subs.forEach((fn) => fn(state));
+        }
+        return {
+          get: () => state,
+          update(fn) {
+            state = fn(state) || state;
+            save();
+            notify();
+          },
+          subscribe(fn) {
+            subs.push(fn);
+          },
+        };
       })();
 
-      /* ────────── COLOUR PICKER ────────── */
-      (function colour() {
-        const swatch = document.getElementById("swatch");
-        const hexEl = document.getElementById("hexValue");
-        const rEl = document.getElementById("rVal");
-        const gEl = document.getElementById("gVal");
-        const bEl = document.getElementById("bVal");
-        const input = document.getElementById("colourInput");
-        const openBtn = document.getElementById("openPicker");
-        const presets = document.getElementById("presets");
-
-        function hexToRgb(hex) {
-          const n = parseInt(hex.replace("#", ""), 16);
-          return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
-        }
-        function contrastInk(hex) {
-          const { r, g, b } = hexToRgb(hex);
-          // relative luminance
-          const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-          return lum > 0.6 ? "#1A1714" : "#F4EDDB";
-        }
-
-        function apply(hex) {
-          hex = hex.toUpperCase();
-          swatch.style.background = hex;
-          hexEl.textContent = hex.replace("#", "");
-          const { r, g, b } = hexToRgb(hex);
-          rEl.textContent = r;
-          gEl.textContent = g;
-          bEl.textContent = b;
-          // tag ink contrast
-          const tag = swatch.querySelector(".tag");
-          if (tag) {
-            const ink = contrastInk(hex);
-            tag.style.background = ink;
-            tag.style.color = ink === "#1A1714" ? "#F4EDDB" : "#1A1714";
-          }
-          // update active preset
-          [...presets.querySelectorAll(".preset")].forEach((p) => {
-            p.classList.toggle("active", p.dataset.c.toUpperCase() === hex);
-          });
-          input.value = hex;
-        }
-
-        input.addEventListener("input", (e) => apply(e.target.value));
-        openBtn.addEventListener("click", () => input.click());
-        presets.addEventListener("click", (e) => {
-          const btn = e.target.closest(".preset");
-          if (btn) apply(btn.dataset.c);
-        });
-
-        apply("#C8391A");
-      })();
-
-      /* ────────── TODO LIST ────────── */
-      (function todos() {
-        const form = document.getElementById("todoForm");
-        const input = document.getElementById("todoInput");
-        const list = document.getElementById("todoList");
-        const empty = document.getElementById("todoEmpty");
-        const countEl = document.getElementById("todoCount");
-
-        let items = [
-          { id: 1, text: "Review the morning handover notes", done: true },
-          { id: 2, text: "Ring the lab about the pending results", done: false },
-          { id: 3, text: "Organise the afternoon rounds", done: false },
+      /* ────────── HELPERS ────────── */
+      const fmt = (n) => {
+        const abs = Math.abs(n);
+        const str =
+          abs >= 1000
+            ? abs.toLocaleString("en-GB", { maximumFractionDigits: 0 })
+            : abs.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return str;
+      };
+      const todayISO = () => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      };
+      const inCurrentMonth = (iso) => {
+        const d = new Date();
+        return iso.startsWith(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+      };
+      const formatShortDate = (iso) => {
+        const [y, m, d] = iso.split("-");
+        const months = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
         ];
-        let nextId = 4;
+        return `${d} ${months[Number(m) - 1]}`;
+      };
+      const bumpNumber = (el) => {
+        el.classList.remove("bump");
+        void el.offsetWidth;
+        el.classList.add("bump");
+      };
 
-        function render() {
-          list.innerHTML = "";
-          items.forEach((item) => {
-            const li = document.createElement("li");
-            li.className = "todo-item" + (item.done ? " done" : "");
-            li.dataset.id = item.id;
-            li.innerHTML = `
-        <span class="idx" aria-hidden="true"></span>
-        <button class="check ${item.done ? "done" : ""}" aria-label="${item.done ? "Mark as not done" : "Mark as done"}"></button>
-        <span class="text"></span>
-        <button class="remove" aria-label="Remove task">Remove</button>
-      `;
-            li.querySelector(".text").textContent = item.text;
-            list.appendChild(li);
+      /* ────────── SEED (first empty load) ────────── */
+      function seedTransactions() {
+        const mk = (offset, type, amount, category, note, recurrence = "none") => {
+          const d = new Date();
+          d.setDate(d.getDate() - offset);
+          const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+          return {
+            id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now() + Math.random()),
+            type,
+            amount,
+            category,
+            note,
+            date: iso,
+            recurrence,
+            createdAt: Date.now() - offset * 86400000,
+          };
+        };
+        return [
+          mk(19, "income", 2400, "Salary", "Monthly pay"),
+          mk(18, "expense", 820, "Housing", "Rent"),
+          mk(16, "expense", 48.5, "Food", "Weekly shop"),
+          mk(14, "expense", 22, "Transport", "Oyster top-up"),
+          mk(11, "expense", 64.2, "Leisure", "Concert ticket"),
+          mk(9, "expense", 38.4, "Food", "Dinner out"),
+          mk(5, "expense", 14.25, "Transport", "Taxi"),
+          mk(3, "income", 180, "Freelance", "Invoice #04"),
+          mk(2, "expense", 52, "Bills", "Mobile plan"),
+          mk(1, "expense", 26.8, "Food", "Groceries"),
+        ];
+      }
+
+      /* ────────── RECURRING GENERATION ────────── */
+      function generateRecurring(state) {
+        const today = todayISO();
+        const existing = new Set(state.transactions.map((t) => `${t.parentId || t.id}@${t.date}`));
+        const generated = [];
+        for (const t of state.transactions) {
+          if (!t.recurrence || t.recurrence === "none") continue;
+          if (t.parentId) continue; // only templates spawn occurrences
+          const cursor = new Date(t.date + "T00:00:00");
+          // safety cap: at most ~10 years of weekly occurrences
+          for (let i = 0; i < 520; i++) {
+            if (t.recurrence === "weekly") cursor.setDate(cursor.getDate() + 7);
+            else if (t.recurrence === "monthly") cursor.setMonth(cursor.getMonth() + 1);
+            else break;
+            const iso = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}-${String(cursor.getDate()).padStart(2, "0")}`;
+            if (iso > today) break;
+            const key = `${t.id}@${iso}`;
+            if (existing.has(key)) continue;
+            existing.add(key);
+            generated.push({
+              id:
+                (crypto.randomUUID && crypto.randomUUID()) ||
+                String(Date.now() + Math.random() + i),
+              type: t.type,
+              amount: t.amount,
+              category: t.category,
+              note: t.note,
+              date: iso,
+              recurrence: "none",
+              parentId: t.id,
+              createdAt: Date.now() + i,
+            });
+          }
+        }
+        if (generated.length === 0) return state;
+        return { ...state, transactions: [...state.transactions, ...generated] };
+      }
+
+      /* ────────── RENDER: SUMMARY ────────── */
+      const el = {
+        income: document.getElementById("statIncome"),
+        incomeSub: document.getElementById("statIncomeSub"),
+        expense: document.getElementById("statExpense"),
+        expenseSub: document.getElementById("statExpenseSub"),
+        net: document.getElementById("statNet"),
+        netSub: document.getElementById("statNetSub"),
+        scopeSub: document.getElementById("scopeSub"),
+      };
+
+      function scopedTxs(state) {
+        return state.scope === "month"
+          ? state.transactions.filter((t) => inCurrentMonth(t.date))
+          : state.transactions;
+      }
+
+      function renderSummary(state) {
+        const txs = scopedTxs(state);
+        const income = txs.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0);
+        const expense = txs.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0);
+        const net = income - expense;
+
+        const setNum = (node, value) => {
+          node.innerHTML = `<span class="cur">£</span>${fmt(value)}`;
+          bumpNumber(node);
+        };
+        setNum(el.income, income);
+        setNum(el.expense, expense);
+
+        el.net.innerHTML = `${net < 0 ? "−" : ""}<span class="cur">£</span>${fmt(net)}`;
+        el.net.classList.toggle("neg", net < 0);
+        el.net.classList.toggle("pos", net > 0);
+        bumpNumber(el.net);
+
+        const incomeCount = txs.filter((t) => t.type === "income").length;
+        const expenseCount = txs.filter((t) => t.type === "expense").length;
+        el.incomeSub.textContent =
+          incomeCount === 0
+            ? "— nothing received yet."
+            : `— ${incomeCount} ${incomeCount === 1 ? "entry" : "entries"} in.`;
+        el.expenseSub.textContent =
+          expenseCount === 0
+            ? "— nothing spent yet."
+            : `— ${expenseCount} ${expenseCount === 1 ? "entry" : "entries"} out.`;
+        el.netSub.textContent =
+          txs.length === 0
+            ? "— the books are empty."
+            : net > 0
+              ? "— ahead, for now."
+              : net < 0
+                ? "— in the red."
+                : "— perfectly level.";
+
+        const total = txs.length;
+        el.scopeSub.textContent = `${total} ${total === 1 ? "entry" : "entries"} · ${state.scope === "month" ? "this month" : "all time"}`;
+
+        document.querySelectorAll("#scopeSeg button").forEach((b) => {
+          b.classList.toggle("active", b.dataset.scope === state.scope);
+        });
+      }
+
+      /* ────────── RENDER: PIE ────────── */
+      const pieSlices = document.getElementById("pieSlices");
+      const pieTotal = document.getElementById("pieTotal");
+      const pieEmpty = document.getElementById("pieEmpty");
+      const legendEl = document.getElementById("legend");
+      const chartsCount = document.getElementById("chartsCount");
+
+      function sliceArc(cx, cy, r, start, end) {
+        // angles in radians, 0 at top (12 o'clock), clockwise
+        const sa = start - Math.PI / 2;
+        const ea = end - Math.PI / 2;
+        const x1 = cx + r * Math.cos(sa);
+        const y1 = cy + r * Math.sin(sa);
+        const x2 = cx + r * Math.cos(ea);
+        const y2 = cy + r * Math.sin(ea);
+        const largeArc = end - start > Math.PI ? 1 : 0;
+        return `M ${cx} ${cy} L ${x1.toFixed(4)} ${y1.toFixed(4)} A ${r} ${r} 0 ${largeArc} 1 ${x2.toFixed(4)} ${y2.toFixed(4)} Z`;
+      }
+
+      function renderCharts(state) {
+        const txs = scopedTxs(state);
+        const expenses = txs.filter((t) => t.type === "expense");
+        const totals = {};
+        expenses.forEach((t) => {
+          totals[t.category] = (totals[t.category] || 0) + t.amount;
+        });
+        const totalExpense = expenses.reduce((s, t) => s + t.amount, 0);
+        const entries = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+
+        // Pie
+        pieSlices.innerHTML = "";
+        if (entries.length === 1) {
+          // single slice = full circle (degenerate arc path)
+          const [cat, val] = entries[0];
+          const color = CAT_COLOR[cat] || "#8A8270";
+          pieSlices.insertAdjacentHTML(
+            "beforeend",
+            `<circle cx="50" cy="50" r="44" fill="${color}" stroke="var(--paper-hi)" stroke-width="0.6"><title>${cat}: £${fmt(val)} (100%)</title></circle>`,
+          );
+        } else if (entries.length > 1) {
+          let start = 0;
+          entries.forEach(([cat, val]) => {
+            const sweep = (val / totalExpense) * 2 * Math.PI;
+            const end = start + sweep;
+            const color = CAT_COLOR[cat] || "#8A8270";
+            const pct = Math.round((val / totalExpense) * 100);
+            pieSlices.insertAdjacentHTML(
+              "beforeend",
+              `<path d="${sliceArc(50, 50, 44, start, end)}" fill="${color}"><title>${cat}: £${fmt(val)} (${pct}%)</title></path>`,
+            );
+            start = end;
           });
-          empty.style.display = items.length ? "none" : "block";
-          const done = items.filter((i) => i.done).length;
-          countEl.textContent = `${done} of ${items.length} complete`;
         }
 
-        form.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const text = input.value.trim();
-          if (!text) return;
-          items.push({ id: nextId++, text, done: false });
-          input.value = "";
-          render();
+        pieTotal.innerHTML = `<span class="cur">£</span>${fmt(totalExpense)}`;
+        pieEmpty.style.display = entries.length === 0 ? "block" : "none";
+
+        // Legend
+        if (entries.length === 0) {
+          legendEl.innerHTML = "";
+        } else {
+          legendEl.innerHTML = entries
+            .map(([cat, val]) => {
+              const pct = Math.round((val / totalExpense) * 100);
+              const color = CAT_COLOR[cat] || "#8A8270";
+              return `<div class="legend-item">
+              <span class="legend-swatch" style="background:${color}"></span>
+              <span class="legend-name">${cat}</span>
+              <span class="legend-val">${pct}%</span>
+            </div>`;
+            })
+            .join("");
+        }
+
+        chartsCount.textContent =
+          totalExpense === 0
+            ? "No data"
+            : `${entries.length} ${entries.length === 1 ? "category" : "categories"}`;
+      }
+
+      /* ────────── RENDER: TREND (30-day) ────────── */
+      const trendSvg = document.getElementById("trendSvg");
+      const trendEmpty = document.getElementById("trendEmpty");
+      const trendIncomeTotal = document.getElementById("trendIncomeTotal");
+      const trendExpenseTotal = document.getElementById("trendExpenseTotal");
+      const trendNetTotal = document.getElementById("trendNetTotal");
+      const trendRange = document.getElementById("trendRange");
+
+      function renderTrend(state) {
+        const DAYS = 30;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const buckets = Array.from({ length: DAYS }, (_, i) => {
+          const d = new Date(today);
+          d.setDate(today.getDate() - (DAYS - 1 - i));
+          const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+          return { iso, date: d, income: 0, expense: 0 };
+        });
+        const index = new Map(buckets.map((b, i) => [b.iso, i]));
+        state.transactions.forEach((t) => {
+          const i = index.get(t.date);
+          if (i === undefined) return;
+          if (t.type === "income") buckets[i].income += t.amount;
+          else buckets[i].expense += t.amount;
         });
 
-        list.addEventListener("click", (e) => {
-          const li = e.target.closest(".todo-item");
-          if (!li) return;
-          const id = Number(li.dataset.id);
-          if (e.target.closest(".check")) {
-            const item = items.find((i) => i.id === id);
-            if (item) {
-              item.done = !item.done;
-              render();
-            }
-          } else if (e.target.closest(".remove")) {
-            li.classList.add("removing");
-            li.addEventListener(
-              "animationend",
-              () => {
-                items = items.filter((i) => i.id !== id);
-                render();
-              },
-              { once: true },
+        const incomeTotal = buckets.reduce((s, b) => s + b.income, 0);
+        const expenseTotal = buckets.reduce((s, b) => s + b.expense, 0);
+        const netTotal = incomeTotal - expenseTotal;
+
+        trendIncomeTotal.innerHTML = `<span class="cur">£</span>${fmt(incomeTotal)}`;
+        trendExpenseTotal.innerHTML = `<span class="cur">£</span>${fmt(expenseTotal)}`;
+        trendNetTotal.innerHTML = `${netTotal < 0 ? "−" : ""}<span class="cur">£</span>${fmt(netTotal)}`;
+
+        const firstDate = buckets[0].date;
+        const lastDate = buckets[DAYS - 1].date;
+        const months = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        const fmtTick = (d) => `${d.getDate()} ${months[d.getMonth()]}`;
+        trendRange.textContent = `${fmtTick(firstDate)} — ${fmtTick(lastDate)}`;
+
+        const hasData = incomeTotal > 0 || expenseTotal > 0;
+        trendSvg.style.display = hasData ? "block" : "none";
+        trendEmpty.style.display = hasData ? "none" : "block";
+        if (!hasData) {
+          trendSvg.innerHTML = "";
+          return;
+        }
+
+        // Dimensions
+        const W = 600;
+        const H = 200;
+        const padL = 40;
+        const padR = 12;
+        const padT = 14;
+        const padB = 26;
+        const innerW = W - padL - padR;
+        const innerH = H - padT - padB;
+
+        // Running net for the net line
+        let cum = 0;
+        const nets = buckets.map((b) => (cum += b.income - b.expense));
+        const maxBucket = buckets.reduce((m, b) => Math.max(m, b.income, b.expense), 0);
+        const netMin = Math.min(0, ...nets);
+        const netMax = Math.max(0, ...nets);
+        const yMax = Math.max(maxBucket, netMax, 1);
+        const yMin = Math.min(0, netMin);
+        const yRange = yMax - yMin || 1;
+
+        const xAt = (i) => padL + (DAYS === 1 ? innerW / 2 : (i * innerW) / (DAYS - 1));
+        const yAt = (v) => padT + innerH - ((v - yMin) / yRange) * innerH;
+
+        const areaPath = (key) => {
+          const top = buckets
+            .map((b, i) => `${i === 0 ? "M" : "L"} ${xAt(i).toFixed(2)} ${yAt(b[key]).toFixed(2)}`)
+            .join(" ");
+          const baseline = yAt(0).toFixed(2);
+          return `${top} L ${xAt(DAYS - 1).toFixed(2)} ${baseline} L ${xAt(0).toFixed(2)} ${baseline} Z`;
+        };
+        const linePath = (key) =>
+          buckets
+            .map((b, i) => `${i === 0 ? "M" : "L"} ${xAt(i).toFixed(2)} ${yAt(b[key]).toFixed(2)}`)
+            .join(" ");
+        const netPath = nets
+          .map((v, i) => `${i === 0 ? "M" : "L"} ${xAt(i).toFixed(2)} ${yAt(v).toFixed(2)}`)
+          .join(" ");
+
+        // Gridlines at 25/50/75/100%
+        const gridLines = [0.25, 0.5, 0.75, 1]
+          .map((f) => {
+            const y = (padT + innerH - f * innerH).toFixed(2);
+            return `<line class="trend-grid" x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}"/>`;
+          })
+          .join("");
+
+        // Zero baseline
+        const zeroY = yAt(0).toFixed(2);
+        const zeroLine = `<line class="trend-axis" x1="${padL}" y1="${zeroY}" x2="${W - padR}" y2="${zeroY}"/>`;
+
+        // X-axis ticks: every ~5 days
+        const tickEvery = 5;
+        let tickMarks = "";
+        for (let i = 0; i < DAYS; i += tickEvery) {
+          const x = xAt(i).toFixed(2);
+          tickMarks += `<text class="trend-tick" x="${x}" y="${H - 8}" text-anchor="middle">${fmtTick(buckets[i].date)}</text>`;
+        }
+        // Always include the last day
+        tickMarks += `<text class="trend-tick" x="${xAt(DAYS - 1).toFixed(2)}" y="${H - 8}" text-anchor="end">${fmtTick(lastDate)}</text>`;
+
+        // Y-axis labels: yMin, 0, yMax
+        const yLabels = [yMax, yMin]
+          .filter((v, i, arr) => arr.indexOf(v) === i)
+          .map(
+            (v) =>
+              `<text class="trend-tick" x="${padL - 6}" y="${(yAt(v) + 3).toFixed(2)}" text-anchor="end">£${fmt(Math.abs(v))}</text>`,
+          )
+          .join("");
+
+        trendSvg.innerHTML = `
+          ${gridLines}
+          ${zeroLine}
+          <path class="trend-income-area" d="${areaPath("income")}"/>
+          <path class="trend-expense-area" d="${areaPath("expense")}"/>
+          <path class="trend-income-line" d="${linePath("income")}"/>
+          <path class="trend-expense-line" d="${linePath("expense")}"/>
+          <path class="trend-net-line" d="${netPath}"/>
+          ${tickMarks}
+          ${yLabels}
+        `;
+      }
+
+      /* ────────── RENDER: LIST ────────── */
+      const txList = document.getElementById("txList");
+      const txEmpty = document.getElementById("txEmpty");
+      const txCount = document.getElementById("txCount");
+
+      function renderList(state) {
+        const { type, category, search } = state.filter;
+        const q = (search || "").trim().toLowerCase();
+        const filtered = state.transactions
+          .filter((t) => type === "all" || t.type === type)
+          .filter((t) => category === "all" || t.category === category)
+          .filter((t) => {
+            if (!q) return true;
+            return (
+              (t.note || "").toLowerCase().includes(q) ||
+              (t.category || "").toLowerCase().includes(q)
             );
+          })
+          .sort((a, b) =>
+            a.date === b.date ? b.createdAt - a.createdAt : a.date < b.date ? 1 : -1,
+          );
+
+        txList.innerHTML = "";
+        filtered.forEach((t) => {
+          const li = document.createElement("li");
+          li.className = "tx-item";
+          li.dataset.id = t.id;
+          const color = CAT_COLOR[t.category] || "#8A8270";
+          const sign = t.type === "income" ? "+" : "−";
+          const isRecurring = (t.recurrence && t.recurrence !== "none") || t.parentId;
+          const recurTitle =
+            t.recurrence === "weekly"
+              ? "Repeats weekly"
+              : t.recurrence === "monthly"
+                ? "Repeats monthly"
+                : t.parentId
+                  ? "Scheduled occurrence"
+                  : "";
+          const recurGlyph = isRecurring
+            ? `<span class="recur" title="${recurTitle}" aria-label="${recurTitle}">↻</span>`
+            : "";
+          li.innerHTML = `
+            <span class="swatch" style="background:${color}" aria-hidden="true"></span>
+            <span class="date">${formatShortDate(t.date)}</span>
+            <span class="cat">${t.category}${recurGlyph}</span>
+            <span class="note ${t.note ? "" : "empty"}"></span>
+            <span class="amount ${t.type}"><span class="sign">${sign}</span><span class="cur">£</span>${fmt(t.amount)}</span>
+            <button class="edit" aria-label="Edit transaction">Edit</button>
+            <button class="remove" aria-label="Remove transaction">Remove</button>
+          `;
+          li.querySelector(".note").textContent = t.note || "—";
+          txList.appendChild(li);
+        });
+
+        txEmpty.style.display = filtered.length ? "none" : "block";
+        if (filtered.length === 0 && state.transactions.length > 0) {
+          txEmpty.textContent = "No entries match these filters.";
+        } else {
+          txEmpty.textContent = "Nothing recorded yet — the page is quiet.";
+        }
+
+        const n = state.transactions.length;
+        txCount.textContent = `${n} ${n === 1 ? "entry" : "entries"}${
+          filtered.length !== n ? ` · ${filtered.length} shown` : ""
+        }`;
+
+        document.querySelectorAll("#filterType button").forEach((b) => {
+          b.classList.toggle("active", b.dataset.val === type);
+        });
+      }
+
+      /* ────────── FORM: add transaction ────────── */
+      const txForm = document.getElementById("txForm");
+      const txAmount = document.getElementById("txAmount");
+      const txType = document.getElementById("txType");
+      const txCategory = document.getElementById("txCategory");
+      const txDate = document.getElementById("txDate");
+      const txNote = document.getElementById("txNote");
+      const txRecurrence = document.getElementById("txRecurrence");
+      const filterCategory = document.getElementById("filterCategory");
+      let currentType = "expense";
+
+      function refreshCategoryOptions() {
+        txCategory.innerHTML = CATEGORIES[currentType]
+          .map((c) => `<option value="${c.name}">${c.name}</option>`)
+          .join("");
+      }
+      function refreshFilterCategoryOptions() {
+        const all = [...CATEGORIES.income, ...CATEGORIES.expense];
+        const current = filterCategory.value || "all";
+        filterCategory.innerHTML =
+          `<option value="all">All categories</option>` +
+          all.map((c) => `<option value="${c.name}">${c.name}</option>`).join("");
+        filterCategory.value = current;
+      }
+
+      txType.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-type]");
+        if (!btn) return;
+        currentType = btn.dataset.type;
+        [...txType.querySelectorAll("button")].forEach((b) => {
+          const on = b === btn;
+          b.classList.toggle("active", on);
+          b.setAttribute("aria-checked", on ? "true" : "false");
+        });
+        refreshCategoryOptions();
+      });
+
+      txDate.value = todayISO();
+      refreshCategoryOptions();
+      refreshFilterCategoryOptions();
+
+      txForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const amount = parseFloat(txAmount.value);
+        if (!Number.isFinite(amount) || amount <= 0) return;
+        const tx = {
+          id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now() + Math.random()),
+          type: currentType,
+          amount: Math.round(amount * 100) / 100,
+          category: txCategory.value,
+          note: txNote.value.trim(),
+          date: txDate.value || todayISO(),
+          recurrence: txRecurrence.value || "none",
+          createdAt: Date.now(),
+        };
+        Store.update((s) => {
+          const withNew = { ...s, transactions: [...s.transactions, tx] };
+          return generateRecurring(withNew);
+        });
+        txAmount.value = "";
+        txNote.value = "";
+        txDate.value = todayISO();
+        txRecurrence.value = "none";
+        txAmount.focus();
+      });
+
+      /* ────────── FILTERS ────────── */
+      document.getElementById("filterType").addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-val]");
+        if (!btn) return;
+        Store.update((s) => ({ ...s, filter: { ...s.filter, type: btn.dataset.val } }));
+      });
+      filterCategory.addEventListener("change", (e) => {
+        Store.update((s) => ({ ...s, filter: { ...s.filter, category: e.target.value } }));
+      });
+      const filterSearch = document.getElementById("filterSearch");
+      let searchTimer;
+      filterSearch.addEventListener("input", (e) => {
+        clearTimeout(searchTimer);
+        const val = e.target.value;
+        searchTimer = setTimeout(() => {
+          Store.update((s) => ({ ...s, filter: { ...s.filter, search: val } }));
+        }, 140);
+      });
+
+      /* ────────── SCOPE (summary) ────────── */
+      document.getElementById("scopeSeg").addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-scope]");
+        if (!btn) return;
+        Store.update((s) => ({ ...s, scope: btn.dataset.scope }));
+      });
+
+      /* ────────── DELETE ────────── */
+      txList.addEventListener("click", (e) => {
+        const btn = e.target.closest(".remove");
+        if (!btn) return;
+        const li = btn.closest(".tx-item");
+        if (li.classList.contains("editing")) return;
+        const id = li.dataset.id;
+        li.classList.add("removing");
+        li.addEventListener(
+          "animationend",
+          () => {
+            Store.update((s) => ({
+              ...s,
+              transactions: s.transactions.filter((t) => t.id !== id),
+            }));
+          },
+          { once: true },
+        );
+      });
+
+      /* ────────── EDIT (inline) ────────── */
+      txList.addEventListener("click", (e) => {
+        const btn = e.target.closest(".edit");
+        if (!btn) return;
+        const li = btn.closest(".tx-item");
+        if (li.classList.contains("editing")) return;
+        const id = li.dataset.id;
+        const t = Store.get().transactions.find((x) => x.id === id);
+        if (!t) return;
+
+        const allCategories = [...CATEGORIES.income, ...CATEGORIES.expense];
+        const catOptions = allCategories
+          .map(
+            (c) =>
+              `<option value="${c.name}"${c.name === t.category ? " selected" : ""}>${c.name}</option>`,
+          )
+          .join("");
+        const typeOptions = ["expense", "income"]
+          .map(
+            (v) =>
+              `<option value="${v}"${v === t.type ? " selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`,
+          )
+          .join("");
+
+        li.classList.add("editing");
+        li.innerHTML = `
+          <div class="tx-edit" data-id="${id}">
+            <input type="date" class="e-date" value="${t.date}" aria-label="Date" />
+            <select class="e-type" aria-label="Type">${typeOptions}</select>
+            <select class="e-cat" aria-label="Category">${catOptions}</select>
+            <input type="text" class="e-note" value="${(t.note || "").replace(/"/g, "&quot;")}" placeholder="Note" maxlength="80" aria-label="Note" />
+            <input type="number" class="e-amount" value="${t.amount}" step="0.01" min="0" aria-label="Amount" />
+            <div class="actions">
+              <button type="button" class="cancel">Cancel</button>
+              <button type="button" class="save">Save</button>
+            </div>
+          </div>
+        `;
+
+        const row = li.querySelector(".tx-edit");
+        row.querySelector(".e-amount").focus();
+        row.querySelector(".e-amount").select();
+
+        const cancel = () => {
+          li.classList.remove("editing");
+          renderList(Store.get());
+        };
+        row.querySelector(".cancel").addEventListener("click", cancel);
+        row.addEventListener("keydown", (ev) => {
+          if (ev.key === "Escape") cancel();
+          if (ev.key === "Enter" && ev.target.tagName !== "BUTTON") {
+            ev.preventDefault();
+            row.querySelector(".save").click();
           }
         });
+        row.querySelector(".save").addEventListener("click", () => {
+          const amount = parseFloat(row.querySelector(".e-amount").value);
+          if (!Number.isFinite(amount) || amount <= 0) return;
+          const patch = {
+            amount: Math.round(amount * 100) / 100,
+            type: row.querySelector(".e-type").value,
+            category: row.querySelector(".e-cat").value,
+            note: row.querySelector(".e-note").value.trim(),
+            date: row.querySelector(".e-date").value || t.date,
+          };
+          Store.update((s) => ({
+            ...s,
+            transactions: s.transactions.map((x) => (x.id === id ? { ...x, ...patch } : x)),
+          }));
+        });
+      });
 
-        render();
-      })();
+      /* ────────── WIRE UP ────────── */
+      Store.subscribe(renderSummary);
+      Store.subscribe(renderCharts);
+      Store.subscribe(renderTrend);
+      Store.subscribe(renderList);
+      // Seed on first empty load so charts and trend have something to draw.
+      if (Store.get().transactions.length === 0) {
+        Store.update((s) => ({ ...s, transactions: seedTransactions() }));
+      }
+      // Backfill any missed recurring occurrences since last visit, then render.
+      Store.update((s) => generateRecurring(s));
+      filterCategory.value = Store.get().filter.category || "all";
+      filterSearch.value = Store.get().filter.search || "";
     </script>
   </body>
 </html>
+Another change
